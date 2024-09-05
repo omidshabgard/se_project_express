@@ -25,7 +25,7 @@ const getUser = async (req, res) => {
     if (user) {
       return res.status(200).json(user);
     } else {
-      res.status(404).send("User not found");
+      res.status(404).send({message: "User not found"});
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -35,5 +35,5 @@ const getUser = async (req, res) => {
 module.exports = {
   createUser,
   getUsers,
-  getUser,  
+  getUser,
 }
