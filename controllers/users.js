@@ -59,11 +59,10 @@ const getUser = async (req, res) => {
         .json({ message: "Invalid user ID format." });
     } else if (error.statusCode === NOT_FOUND) {
       return res.status(NOT_FOUND).json({ message: error.message });
-    } else {
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .json({ message: "An error has occurred on the server." });
     }
+    return res
+      .status(INTERNAL_SERVER_ERROR)
+      .json({ message: "An error has occurred on the server." });
   }
 };
 

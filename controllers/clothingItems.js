@@ -18,7 +18,7 @@ const createItem = async (req, res) => {
         .status(BAD_REQUEST)
         .json({ message: "Invalid data provided for item creation." });
     }
-    res
+    return res
       .status(INTERNAL_SERVER_ERROR)
       .json({ message: "An error has occurred on the server." });
   }
@@ -32,7 +32,7 @@ const getItems = async (req, res) => {
     console.error(
       `Error ${error.name} with the message '${error.message}' occurred while fetching items.`
     );
-    res
+    return res
       .status(INTERNAL_SERVER_ERROR)
       .json({ message: "An error has occurred on the server." });
   }
@@ -57,11 +57,10 @@ const deleteItem = async (req, res) => {
         .json({ message: "Invalid item ID format." });
     } else if (error.statusCode === NOT_FOUND) {
       return res.status(NOT_FOUND).json({ message: error.message });
-    } else {
-      res
-        .status(INTERNAL_SERVER_ERROR)
-        .json({ message: "An error has occurred on the server." });
     }
+    return res
+      .status(INTERNAL_SERVER_ERROR)
+      .json({ message: "An error has occurred on the server." });
   }
 };
 
@@ -90,11 +89,10 @@ const likeItem = async (req, res) => {
         .json({ message: "Invalid item ID format." });
     } else if (error.statusCode === NOT_FOUND) {
       return res.status(NOT_FOUND).json({ message: error.message });
-    } else {
-      res
-        .status(INTERNAL_SERVER_ERROR)
-        .json({ message: "An error has occurred on the server." });
     }
+    return res
+      .status(INTERNAL_SERVER_ERROR)
+      .json({ message: "An error has occurred on the server." });
   }
 };
 
@@ -123,11 +121,10 @@ const dislikeItem = async (req, res) => {
         .json({ message: "Invalid item ID format." });
     } else if (error.statusCode === NOT_FOUND) {
       return res.status(NOT_FOUND).json({ message: error.message });
-    } else {
-      res
-        .status(INTERNAL_SERVER_ERROR)
-        .json({ message: "An error has occurred on the server." });
     }
+    return res
+      .status(INTERNAL_SERVER_ERROR)
+      .json({ message: "An error has occurred on the server." });
   }
 };
 
