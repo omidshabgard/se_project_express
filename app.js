@@ -14,12 +14,11 @@ mongoose
   })
   .catch(console.error);
 
-
 app.use(express.json());
 
 app.use((req, res, next) => {
   req.user = {
-    _id: "66d95e0525ce3228576bf6ce",
+    _id: "66d73bd035cacfa3f8af938a",
   };
   next();
 });
