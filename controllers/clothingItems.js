@@ -24,11 +24,10 @@ const deleteItem = async (req, res) => {
     const item = await clothingItem.findByIdAndDelete(id);
     if (item) {
       return res.status(200).json(item);
-    } else {
-      res.status(404).send("Item not found");
     }
+    return res.status(404).send("Item not found");
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
 
@@ -39,11 +38,11 @@ const likeItem = async (req, res) => {
       { $addToSet: { likes: req.user._id } },
       { new: true }
     );
-    
+
     if (item) {
       res.status(200).json(item);
     } else {
-      res.status(404).send({ message: "Item not found"});
+      res.status(404).send({ message: "Item not found" });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });

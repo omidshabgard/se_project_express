@@ -27,5 +27,11 @@ module.exports = {
         allow: ["_id"],
       },
     ],
+    "no-underscore-dangle": [
+      "error",
+      {
+        allow: ["_id"],
+      },
+    ],
   },
 };
