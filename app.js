@@ -7,6 +7,8 @@ const app = express();
 
 const { PORT = 3001 } = process.env;
 
+const NOT_FOUND = 404;
+
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
   .then(() => {
@@ -26,7 +28,7 @@ app.use((req, res, next) => {
 app.use("/", routes);
 
 app.use((req, res) => {
-  res.status(404).json({ message: "Requested resource not found" });
+  res.status(NOT_FOUND).json({ message: "Requested resource not found" });
 });
 
 app.listen(PORT, () => {

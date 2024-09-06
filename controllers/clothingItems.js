@@ -7,17 +7,32 @@ const {
 
 const createItem = async (req, res) => {
   try {
-    const item = await clothingItem.create(req.body);
+    const { name, weather, imageUrl } = req.body;
+    if (!name || !weather || !imageUrl) {
+      return res.status(BAD_REQUEST).json({
+        message: "Missing required fields: name, weather, and imageUrl.",
+      });
+    }
+
+    const item = await clothingItem.create({
+      name,
+      weather,
+      imageUrl,
+      owner: req.user._id,
+    });
+    
     res.status(201).json(item);
   } catch (error) {
     console.error(
       `Error ${error.name} with the message '${error.message}' occurred while creating an item.`
     );
+
     if (error.name === "ValidationError") {
       return res
         .status(BAD_REQUEST)
         .json({ message: "Invalid data provided for item creation." });
     }
+
     return res
       .status(INTERNAL_SERVER_ERROR)
       .json({ message: "An error has occurred on the server." });

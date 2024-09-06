@@ -38,11 +38,7 @@ const clothingItemSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  model: {
-    type: String,
-    required: true,
-    enum: ["top", "bottom", "shoes"],
-  },
+  // Removed the 'model' field as per the recommendation
 });
 
 const clothingItem = mongoose.model("clothingItem", clothingItemSchema);
