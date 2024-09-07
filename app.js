@@ -1,13 +1,16 @@
 const express = require("express");
 const mongoose = require("mongoose");
 
+
 const routes = require("./routes/index");
+const { NOT_FOUND } = require("./utils/errors");
 
 const app = express();
 
 const { PORT = 3001 } = process.env;
 
-const NOT_FOUND = 404;
+// mongoose.set('strictQuery', true);
+mongoose.set('strictQuery', false);
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
@@ -32,5 +35,5 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
+  // console.log(`Server is listening on port ${PORT}`);
 });

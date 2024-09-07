@@ -43,7 +43,7 @@ const getUser = async (req, res) => {
     const { id } = req.params;
     const user = await User.findById(id).orFail(() => {
       const error = new Error("User not found.");
-      error.statusCode = NOT_FOUND; // Set custom status code
+      error.statusCode = NOT_FOUND; 
       throw error;
     });
 
@@ -57,7 +57,8 @@ const getUser = async (req, res) => {
       return res
         .status(BAD_REQUEST)
         .json({ message: "Invalid user ID format." });
-    } else if (error.statusCode === NOT_FOUND) {
+    }
+    if (error.statusCode === NOT_FOUND) {
       return res.status(NOT_FOUND).json({ message: error.message });
     }
     return res

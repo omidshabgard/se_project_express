@@ -20,8 +20,8 @@ const createItem = async (req, res) => {
       imageUrl,
       owner: req.user._id,
     });
-    
-    res.status(201).json(item);
+
+    return res.status(201).json(item);
   } catch (error) {
     console.error(
       `Error ${error.name} with the message '${error.message}' occurred while creating an item.`
@@ -42,7 +42,7 @@ const createItem = async (req, res) => {
 const getItems = async (req, res) => {
   try {
     const items = await clothingItem.find();
-    res.status(200).json(items);
+    return res.status(200).json(items);
   } catch (error) {
     console.error(
       `Error ${error.name} with the message '${error.message}' occurred while fetching items.`
@@ -58,10 +58,10 @@ const deleteItem = async (req, res) => {
     const { id } = req.params;
     const item = await clothingItem.findByIdAndDelete(id).orFail(() => {
       const error = new Error("Item not found.");
-      error.statusCode = NOT_FOUND; // Custom status code
+      error.statusCode = NOT_FOUND;
       throw error;
     });
-    res.status(200).json(item);
+    return res.status(200).json(item);
   } catch (error) {
     console.error(
       `Error ${error.name} with the message '${error.message}' occurred while deleting an item.`
@@ -70,7 +70,8 @@ const deleteItem = async (req, res) => {
       return res
         .status(BAD_REQUEST)
         .json({ message: "Invalid item ID format." });
-    } else if (error.statusCode === NOT_FOUND) {
+    }
+    if (error.statusCode === NOT_FOUND) {
       return res.status(NOT_FOUND).json({ message: error.message });
     }
     return res
@@ -93,7 +94,7 @@ const likeItem = async (req, res) => {
         throw error;
       });
 
-    res.status(200).json(item);
+    return res.status(200).json(item);
   } catch (error) {
     console.error(
       `Error ${error.name} with the message '${error.message}' occurred while liking an item.`
@@ -102,7 +103,8 @@ const likeItem = async (req, res) => {
       return res
         .status(BAD_REQUEST)
         .json({ message: "Invalid item ID format." });
-    } else if (error.statusCode === NOT_FOUND) {
+    }
+    if (error.statusCode === NOT_FOUND) {
       return res.status(NOT_FOUND).json({ message: error.message });
     }
     return res
@@ -125,7 +127,7 @@ const dislikeItem = async (req, res) => {
         throw error;
       });
 
-    res.status(200).json(item);
+    return res.status(200).json(item); // Ensure return is present here
   } catch (error) {
     console.error(
       `Error ${error.name} with the message '${error.message}' occurred while disliking an item.`
@@ -134,7 +136,8 @@ const dislikeItem = async (req, res) => {
       return res
         .status(BAD_REQUEST)
         .json({ message: "Invalid item ID format." });
-    } else if (error.statusCode === NOT_FOUND) {
+    }
+    if (error.statusCode === NOT_FOUND) {
       return res.status(NOT_FOUND).json({ message: error.message });
     }
     return res
