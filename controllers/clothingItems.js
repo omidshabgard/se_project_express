@@ -3,6 +3,7 @@ const {
   BAD_REQUEST,
   NOT_FOUND,
   INTERNAL_SERVER_ERROR,
+  // UNAUTHORIZED: 401,
 } = require("../utils/errors");
 
 const createItem = async (req, res) => {
@@ -56,12 +57,23 @@ const getItems = async (req, res) => {
 const deleteItem = async (req, res) => {
   try {
     const { id } = req.params;
-    const item = await clothingItem.findByIdAndDelete(id).orFail(() => {
+    const userId = req.user._id;
+
+    const item = await clothingItem.findById(id).orFail(() => {
       const error = new Error("Item not found.");
       error.statusCode = NOT_FOUND;
       throw error;
     });
-    return res.status(200).json(item);
+
+    if (item.owner.toString() !== userId.toString()) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to delete this item." });
+    }
+
+    await item.remove();
+
+    return res.status(200).json({ message: "Item successfully deleted." });
   } catch (error) {
     console.error(
       `Error ${error.name} with the message '${error.message}' occurred while deleting an item.`
