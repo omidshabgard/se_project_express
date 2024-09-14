@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const auth = require("./middlewares/auth");
 const cors = require("cors");
+const auth = require("./middlewares/auth");
 const { createUser, login } = require("./controllers/users");
 const { getItems } = require("./controllers/clothingItems");
 

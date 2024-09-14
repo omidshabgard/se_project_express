@@ -1,26 +1,28 @@
-const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../utils/config");
+const User = require("../models/user"); // Reordered after jwt
 
 const {
   BAD_REQUEST,
   NOT_FOUND,
   INTERNAL_SERVER_ERROR,
+  UNAUTHORIZED,
 } = require("../utils/errors");
+
+console.log(JWT_SECRET); // "secret"
+console.log(BAD_REQUEST); // 400
 
 const createUser = async (req, res) => {
   try {
     const { name, avatar, email, password } = req.body;
 
-    // Ensure all required fields are present
     if (!email || !password || !name || !avatar) {
       return res
         .status(BAD_REQUEST)
         .json({ message: "All fields are required." });
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(BAD_REQUEST).json({ message: "User already exists." });
@@ -139,20 +141,7 @@ const getUser = async (req, res) => {
   }
 };
 
-const getCurrentUser = async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id);
-    if (!user) {
-      return res.status(NOT_FOUND).json({ message: "User not found" });
-    }
-    return res.status(200).json(user);
-  } catch (error) {
-    return res
-      .status(INTERNAL_SERVER_ERROR)
-      .json({ message: "An error has occurred on the server." });
-  }
-};
-
+/*
 const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -178,10 +167,13 @@ const updateUser = async (req, res) => {
       .json({ message: "An error has occurred on the server." });
   }
 };
+*/
+
 module.exports = {
   createUser,
   getUsers,
   getUser,
   login,
   getCurrentUser,
+  // updateUser,
 };
