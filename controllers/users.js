@@ -10,8 +10,8 @@ const {
   UNAUTHORIZED,
 } = require("../utils/errors");
 
-// console.log(JWT_SECRET); // "secret"
-// console.log(BAD_REQUEST); // 400
+// console.log(JWT_SECRET); // 
+// console.log(BAD_REQUEST); //
 
 const createUser = async (req, res) => {
   try {
@@ -188,6 +188,6 @@ module.exports = {
   getUsers,
   getUser,
   login,
-  getCurrentUser, // Now properly defined
+  getCurrentUser,
   // updateUser,
 };

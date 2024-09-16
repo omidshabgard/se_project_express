@@ -139,7 +139,7 @@ const dislikeItem = async (req, res) => {
         throw error;
       });
 
-    return res.status(200).json(item); // Ensure return is present here
+    return res.status(200).json(item);
   } catch (error) {
     console.error(
       `Error ${error.name} with the message '${error.message}' occurred while disliking an item.`
