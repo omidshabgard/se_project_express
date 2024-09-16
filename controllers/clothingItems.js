@@ -3,17 +3,12 @@ const {
   BAD_REQUEST,
   NOT_FOUND,
   INTERNAL_SERVER_ERROR,
-  // UNAUTHORIZED: 401,
+  FORBIDDEN,
 } = require("../utils/errors");
 
 const createItem = async (req, res) => {
   try {
     const { name, weather, imageUrl } = req.body;
-    if (!name || !weather || !imageUrl) {
-      return res.status(BAD_REQUEST).json({
-        message: "Missing required fields: name, weather, and imageUrl.",
-      });
-    }
 
     const item = await clothingItem.create({
       name,
@@ -67,7 +62,7 @@ const deleteItem = async (req, res) => {
 
     if (item.owner.toString() !== userId.toString()) {
       return res
-        .status(403)
+        .status(FORBIDDEN)
         .json({ message: "You are not authorized to delete this item." });
     }
 

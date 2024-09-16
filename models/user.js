@@ -33,7 +33,6 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minlength: 6,
     select: false,
   },
 });
@@ -55,3 +54,5 @@ userSchema.statics.findUserByCredentials = async function findUserByCredentials(
 
   return user;
 };
+
+module.exports = mongoose.model("User", userSchema);
