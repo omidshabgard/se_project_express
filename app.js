@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const auth = require("./middlewares/auth");
-const { createUser, login } = require("./controllers/users");
+const { createUser, login, updateUser } = require("./controllers/users");
 const { getItems } = require("./controllers/clothingItems");
 
 const routes = require("./routes/index");
@@ -18,15 +18,15 @@ mongoose.set("strictQuery", false);
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
   .then(() => {
-    // console.log("Connected to the database");
+    console.log("Connected to the database");
   })
   .catch(console.error);
 
 app.use(express.json());
 
-
 app.post("/signin", login);
 app.post("/signup", createUser);
+app.put("/updateUser", auth, updateUser);
 
 app.get("/items", getItems);
 
@@ -39,5 +39,5 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
-  // console.log(`Server is listening on port ${PORT}`);
+  console.log(`Server is listening on port ${PORT}`);
 });
