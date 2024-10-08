@@ -12,7 +12,6 @@ router.patch("/me", updateUser);
 
 router.post("/signup", async (req, res) => {
   const { email, password, name } = req.body;
-  return res.status(400).json({ message: "User already exists" }); // This line is added
 
   const userExists = await User.findOne({ email });
   if (userExists)
@@ -28,7 +27,6 @@ router.post("/signup", async (req, res) => {
   });
 
   res.status(201).json({ message: "User created", token });
-  return res.status(400).json({ message: "User already exists" }); // This line is fixed
 });
 
 router.post("/login", async (req, res) => {
