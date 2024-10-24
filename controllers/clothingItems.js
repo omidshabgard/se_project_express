@@ -1,12 +1,11 @@
 const clothingItem = require("../models/clothingItem");
 const {
-  BAD_REQUEST,
-  NOT_FOUND,
-  INTERNAL_SERVER_ERROR,
-  FORBIDDEN,
-} = require("../utils/errors");
+  BadRequestError,
+  NotFoundError,
+  ForbiddenError
+} = require("../utils/customErrors");  // Import custom error constructors
 
-const createItem = async (req, res) => {
+const createItem = async (req, res, next) => {
   try {
     const { name, weather, imageUrl } = req.body;
 
@@ -24,18 +23,14 @@ const createItem = async (req, res) => {
     );
 
     if (error.name === "ValidationError") {
-      return res
-        .status(BAD_REQUEST)
-        .json({ message: "Invalid data provided for item creation." });
+      return next(new BadRequestError("Invalid data provided for item creation."));
     }
 
-    return res
-      .status(INTERNAL_SERVER_ERROR)
-      .json({ message: "An error has occurred on the server." });
+    return next(error);  // Pass error to the centralized error handler
   }
 };
 
-const getItems = async (req, res) => {
+const getItems = async (req, res, next) => {
   try {
     const items = await clothingItem.find();
     return res.status(200).json(items);
@@ -43,27 +38,21 @@ const getItems = async (req, res) => {
     console.error(
       `Error ${error.name} with the message '${error.message}' occurred while fetching items.`
     );
-    return res
-      .status(INTERNAL_SERVER_ERROR)
-      .json({ message: "An error has occurred on the server." });
+    return next(error);  // Pass error to the centralized error handler
   }
 };
 
-const deleteItem = async (req, res) => {
+const deleteItem = async (req, res, next) => {
   try {
     const { id } = req.params;
     const userId = req.user._id;
 
     const item = await clothingItem.findById(id).orFail(() => {
-      const error = new Error("Item not found.");
-      error.statusCode = NOT_FOUND;
-      throw error;
+      throw new NotFoundError("Item not found.");
     });
 
     if (item.owner.toString() !== userId.toString()) {
-      return res
-        .status(FORBIDDEN)
-        .json({ message: "You are not authorized to delete this item." });
+      throw new ForbiddenError("You are not authorized to delete this item.");
     }
 
     await item.remove();
@@ -74,20 +63,13 @@ const deleteItem = async (req, res) => {
       `Error ${error.name} with the message '${error.message}' occurred while deleting an item.`
     );
     if (error.name === "CastError") {
-      return res
-        .status(BAD_REQUEST)
-        .json({ message: "Invalid item ID format." });
+      return next(new BadRequestError("Invalid item ID format."));
     }
-    if (error.statusCode === NOT_FOUND) {
-      return res.status(NOT_FOUND).json({ message: error.message });
-    }
-    return res
-      .status(INTERNAL_SERVER_ERROR)
-      .json({ message: "An error has occurred on the server." });
+    return next(error);  // Pass error to the centralized error handler
   }
 };
 
-const likeItem = async (req, res) => {
+const likeItem = async (req, res, next) => {
   try {
     const item = await clothingItem
       .findByIdAndUpdate(
@@ -96,9 +78,7 @@ const likeItem = async (req, res) => {
         { new: true }
       )
       .orFail(() => {
-        const error = new Error("Item not found.");
-        error.statusCode = NOT_FOUND;
-        throw error;
+        throw new NotFoundError("Item not found.");
       });
 
     return res.status(200).json(item);
@@ -107,20 +87,13 @@ const likeItem = async (req, res) => {
       `Error ${error.name} with the message '${error.message}' occurred while liking an item.`
     );
     if (error.name === "CastError") {
-      return res
-        .status(BAD_REQUEST)
-        .json({ message: "Invalid item ID format." });
+      return next(new BadRequestError("Invalid item ID format."));
     }
-    if (error.statusCode === NOT_FOUND) {
-      return res.status(NOT_FOUND).json({ message: error.message });
-    }
-    return res
-      .status(INTERNAL_SERVER_ERROR)
-      .json({ message: "An error has occurred on the server." });
+    return next(error);  // Pass error to the centralized error handler
   }
 };
 
-const dislikeItem = async (req, res) => {
+const dislikeItem = async (req, res, next) => {
   try {
     const item = await clothingItem
       .findByIdAndUpdate(
@@ -129,9 +102,7 @@ const dislikeItem = async (req, res) => {
         { new: true }
       )
       .orFail(() => {
-        const error = new Error("Item not found.");
-        error.statusCode = NOT_FOUND;
-        throw error;
+        throw new NotFoundError("Item not found.");
       });
 
     return res.status(200).json(item);
@@ -140,16 +111,9 @@ const dislikeItem = async (req, res) => {
       `Error ${error.name} with the message '${error.message}' occurred while disliking an item.`
     );
     if (error.name === "CastError") {
-      return res
-        .status(BAD_REQUEST)
-        .json({ message: "Invalid item ID format." });
+      return next(new BadRequestError("Invalid item ID format."));
     }
-    if (error.statusCode === NOT_FOUND) {
-      return res.status(NOT_FOUND).json({ message: error.message });
-    }
-    return res
-      .status(INTERNAL_SERVER_ERROR)
-      .json({ message: "An error has occurred on the server." });
+    return next(error);  // Pass error to the centralized error handler
   }
 };
 

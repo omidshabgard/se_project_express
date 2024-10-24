@@ -5,10 +5,21 @@ const {
   likeItem,
   dislikeItem,
 } = require("../controllers/clothingItems");
+const {
+  validateClothingItem,
+  validateId,
+} = require("../middlewares/validation");
 
-router.post("/", createItem);
-router.delete("/:id", deleteItem);
-router.put("/:id/likes", likeItem);
-router.delete("/:id/likes", dislikeItem);
+// Route for creating a clothing item with validation
+router.post("/", validateClothingItem, createItem);
+
+// Route for deleting an item by ID with validation
+router.delete("/:id", validateId, deleteItem);
+
+// Route for liking an item by ID with validation
+router.put("/:id/likes", validateId, likeItem);
+
+// Route for disliking an item by ID with validation
+router.delete("/:id/likes", validateId, dislikeItem);
 
 module.exports = router;
