@@ -25,7 +25,6 @@ const allowedOrigins = [
   "http://localhost:3000",
   "https://www.lovese.jumpingcrab.com",
   "https://api.lovese.jumpingcrab.com",
-  "https://lovese.jumpingcrab.com",
 ];
 
 const corsOptions = {
@@ -59,18 +58,14 @@ mongoose
 app.use(requestLogger);
 app.use(express.json());
 
-// Public routes (No auth required)
 app.post("/signin", validateUserLogin, login);
 app.post("/signup", validateUserCreation, createUser);
 
-// Auth middleware (Applied after public routes)
 app.use(auth);
 
-// Protected routes (Require authentication)
 app.get("/items", getItems);
 app.use("/", routes);
 
-// Handle 404 errors
 app.use((req, res, next) => {
   next(new NotFoundError("Requested resource not found"));
 });
