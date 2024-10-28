@@ -1,5 +1,7 @@
 // utils/customErrors.js
 
+/* eslint-disable max-classes-per-file */
+
 // Base class for custom errors
 class AppError extends Error {
   constructor(message, statusCode) {

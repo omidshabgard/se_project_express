@@ -40,9 +40,11 @@ This project is a Node.js application that interacts with a MongoDB database to 
   ```bash
   npm run lint
   ```
-  
+
 ## Backend Repository
-  [Backend Repository](https://github.com/omidshabgard/se_project_express)
+
+[Backend Repository](https://github.com/omidshabgard/se_project_express)
+
 ## Database
 
 - **MongoDB Connection**: Connects to MongoDB server at `mongodb://localhost:27017/wtwr_db`.
@@ -58,6 +60,7 @@ This project is a Node.js application that interacts with a MongoDB database to 
   - `createdAt`: Required date.
 
 **Valid URLs**:
+
 - `http://example.com/`
 - `https://www.example.com/`
 - `http://1-example.com`
@@ -65,6 +68,7 @@ This project is a Node.js application that interacts with a MongoDB database to 
 - `http://example-example-example.com`
 
 **Invalid URLs**:
+
 - `https://thisisnotvalidurl`
 - `https://x~>!`
 
@@ -76,14 +80,23 @@ This project is a Node.js application that interacts with a MongoDB database to 
 ## Routes
 
 - **Users Routes**:
+
   - `GET /users`: Return all users.
   - `GET /users/:userId`: Return a user by `_id`.
   - `POST /users`: Create a new user.
 
 - **Clothing Items Routes**:
+
   - `GET /items`: Return all clothing items.
   - `POST /items`: Create a clothing item with `name`, `imageUrl`, and `weather`. `owner` is set from `req.user._id`.
   - `DELETE /items/:id`: Delete a clothing item by `_id`.
   - `PUT /items/:id/likes`: Like a clothing item (use `{ new: true }` for options).
   - `DELETE /items/:id/likes`: Unlike a clothing item (use `{ new: true }` for options).
 
+- Technologies
+- Access information
+- Backend repository
+- Database schema details
+- Models
+- Routes
+- Valid and invalid URLs

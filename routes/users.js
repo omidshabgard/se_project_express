@@ -10,8 +10,6 @@ const {
 
 const router = express.Router();
 
-
-
 // Route for getting the current user
 router.get("/me", getCurrentUser);
 
@@ -36,7 +34,8 @@ router.post("/signup", validateUserCreation, async (req, res) => {
     expiresIn: "1h",
   });
 
-  res.status(201).json({ message: "User created", token });
+  // Add return here to ensure the function always returns a value
+  return res.status(201).json({ message: "User created", token });
 });
 
 // Route for user login with validation
@@ -57,7 +56,8 @@ router.post("/login", validateUserLogin, async (req, res) => {
     expiresIn: "1h",
   });
 
-  res.status(200).json({ message: "Logged in", token });
+  // Add return here to ensure the function always returns a value
+  return res.status(200).json({ message: "Logged in", token });
 });
 
 module.exports = router;
