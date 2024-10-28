@@ -1,3 +1,5 @@
+// app.js
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -10,7 +12,6 @@ const { getItems } = require("./controllers/clothingItems");
 const routes = require("./routes/index");
 
 const NotFoundError = require("./utils/NotFoundError");
-
 const errorHandler = require("./middlewares/errorHandler");
 const {
   validateUserCreation,
@@ -30,12 +31,9 @@ const allowedOrigins = [
 const corsOptions = {
   origin: (origin, callback) => {
     console.log("Origin:", origin);
-
     if (!origin || allowedOrigins.includes(origin)) {
-      console.log("CORS allowed for:", origin);
       callback(null, true);
     } else {
-      console.log("CORS blocked for:", origin);
       callback(new Error("Not allowed by CORS"));
     }
   },
@@ -49,6 +47,7 @@ app.options("*", cors(corsOptions));
 
 const { PORT = 3001 } = process.env;
 
+// Connect to MongoDB
 mongoose.set("strictQuery", false);
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
@@ -58,35 +57,26 @@ mongoose
   .catch(console.error);
 
 app.use(requestLogger);
-
 app.use(express.json());
 
-app.get("/crash-test", () => {
-  setTimeout(() => {
-    throw new Error("Server will crash now");
-  }, 0);
-});
-
-// Signup and login routes should not require auth
+// Public routes (No auth required)
 app.post("/signin", validateUserLogin, login);
 app.post("/signup", validateUserCreation, createUser);
 
-// Apply the auth middleware after the public routes (signin/signup)
+// Auth middleware (Applied after public routes)
 app.use(auth);
 
-// Protected routes go here
+// Protected routes (Require authentication)
 app.get("/items", getItems);
-
 app.use("/", routes);
 
+// Handle 404 errors
 app.use((req, res, next) => {
   next(new NotFoundError("Requested resource not found"));
 });
 
 app.use(errorLogger);
-
 app.use(errors());
-
 app.use(errorHandler);
 
 app.listen(PORT, () => {
