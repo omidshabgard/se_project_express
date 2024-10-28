@@ -2,30 +2,31 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
-
 const { errors } = require("celebrate");
 
 const auth = require("./middlewares/auth");
-const { createUser, login, updateUser } = require("./controllers/users");
+const { createUser, login } = require("./controllers/users");
 const { getItems } = require("./controllers/clothingItems");
 const routes = require("./routes/index");
-const { NOT_FOUND } = require("./utils/errors");
+const { notFoundError } = require("./utils/errors");
 const errorHandler = require("./middlewares/errorHandler");
-const validateClothingItem = require("./middlewares/validation");
+const {
+  validateUserCreation,
+  validateUserLogin,
+} = require("./middlewares/validation");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
 
 const app = express();
 
-
 const corsOptions = {
-  origin: 'http://localhost:3000',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-  allowedHeaders: '*',
+  origin: "http://localhost:3000",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+  allowedHeaders: "*",
   credentials: true,
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 const { PORT = 3001 } = process.env;
 
@@ -47,10 +48,8 @@ app.get("/crash-test", () => {
   }, 0);
 });
 
-app.post("/signin", login);
-app.post("/signup", createUser);
-
-app.put("/updateUser", auth, updateUser);
+app.post("/signin", validateUserLogin, login);
+app.post("/signup", validateUserCreation, createUser);
 
 app.get("/items", getItems);
 
@@ -58,8 +57,8 @@ app.use(auth);
 
 app.use("/", routes);
 
-app.use((req, res) => {
-  res.status(NOT_FOUND).json({ message: "Requested resource not found" });
+app.use((req, res, next) => {
+  next(new notFoundError("Requested resource not found"));
 });
 
 app.use(errorLogger);

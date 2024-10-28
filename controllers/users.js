@@ -2,26 +2,17 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../utils/config");
 const User = require("../models/user");
+const BadRequestError = require("../utils/badRequestError");
+const NotFoundError = require("../utils/notFoundError");
+const ConflictError = require("../utils/conflictError");
+const UnauthorizedError = require("../utils/unauthorizedError");
 
-const {
-  BAD_REQUEST,
-  NOT_FOUND,
-  INTERNAL_SERVER_ERROR,
-  UNAUTHORIZED,
-  FUNCTIONAL_ERROR,
-} = require("../utils/errors");
-
-// console.log(JWT_SECRET); //
-// console.log(BAD_REQUEST); //
-
-const createUser = async (req, res) => {
+const createUser = async (req, res, next) => {
   try {
     const { name, avatar, email, password } = req.body;
 
     if (!email || !password || !name || !avatar) {
-      return res
-        .status(BAD_REQUEST)
-        .json({ message: "All fields are required." });
+      throw new BadRequestError("All fields are required.");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -42,28 +33,22 @@ const createUser = async (req, res) => {
       `Error ${error.name} with the message '${error.message}' occurred while creating a user.`
     );
     if (error.code === 11000) {
-      return res
-        .status(FUNCTIONAL_ERROR)
-        .json({ message: "User with this email already exists." });
+      return next(new ConflictError("User with this email already exists."));
     }
     if (error.name === "ValidationError") {
-      return res
-        .status(BAD_REQUEST)
-        .json({ message: "Invalid data provided for user creation." });
+      return next(
+        new BadRequestError("Invalid data provided for user creation.")
+      );
     }
-    return res
-      .status(INTERNAL_SERVER_ERROR)
-      .json({ message: "An error has occurred on the server." });
+    return next(error); // Let the error handler handle other types of errors
   }
 };
 
-const login = async (req, res) => {
+const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res
-        .status(BAD_REQUEST)
-        .json({ message: "Email and password are required." });
+      throw new BadRequestError("Email and password are required.");
     }
 
     const user = await User.findUserByCredentials(email, password);
@@ -78,34 +63,29 @@ const login = async (req, res) => {
     );
 
     if (error.message === "User not found.") {
-      return res.status(UNAUTHORIZED).json({ message: error.message });
+      return next(new UnauthorizedError(error.message));
     }
     if (error.message === "Invalid password.") {
-      return res.status(UNAUTHORIZED).json({ message: error.message });
+      return next(new UnauthorizedError(error.message));
     }
-    return res
-      .status(INTERNAL_SERVER_ERROR)
-      .json({ message: "An error has occurred on the server." });
+    return next(error); // Let the error handler handle other types of errors
   }
 };
 
-const getCurrentUser = async (req, res) => {
+const getCurrentUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user) {
-      return res.status(NOT_FOUND).json({ message: "User not found" });
+      return next(new NotFoundError("User not found"));
     }
     return res.status(200).json(user);
   } catch (error) {
-    return res
-      .status(INTERNAL_SERVER_ERROR)
-      .json({ message: "An error has occurred on the server." });
+    return next(error); // Let the error handler handle other types of errors
   }
 };
 
-const updateUser = async (req, res) => {
+const updateUser = async (req, res, next) => {
   try {
-
     const { name, avatar } = req.body;
     const id = req.user._id;
     const updatedUser = await User.findByIdAndUpdate(
@@ -114,19 +94,16 @@ const updateUser = async (req, res) => {
       { new: true, runValidators: true }
     );
     if (!updatedUser) {
-      return res.status(NOT_FOUND).json({ message: "User not found" });
+      return next(new NotFoundError("User not found"));
     }
     return res.status(200).json(updatedUser);
   } catch (error) {
     if (error.name === "ValidationError") {
-      return res
-        .status(BAD_REQUEST)
-        .json({ message: "Invalid data provided for user update." });
+      return next(
+        new BadRequestError("Invalid data provided for user update.")
+      );
     }
-
-    return res
-      .status(INTERNAL_SERVER_ERROR)
-      .json({ message: "An error has occurred on the server." });
+    return next(error); // Let the error handler handle other types of errors
   }
 };
 

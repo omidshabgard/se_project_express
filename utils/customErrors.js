@@ -1,17 +1,11 @@
-// utils/customErrors.js
-
-/* eslint-disable max-classes-per-file */
-
-// Base class for custom errors
 class AppError extends Error {
   constructor(message, statusCode) {
     super(message); // Call the parent class (Error)
-    this.status = statusCode;
+    this.statusCode = statusCode;
     this.name = this.constructor.name; // Set the name to the class name (e.g., 'BadRequestError')
   }
 }
 
-// Specific custom error classes
 class BadRequestError extends AppError {
   constructor(message = "Bad Request") {
     super(message, 400);
@@ -48,4 +42,5 @@ module.exports = {
   ForbiddenError,
   NotFoundError,
   ConflictError,
+  AppError,
 };

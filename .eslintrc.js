@@ -28,6 +28,5 @@ module.exports = {
       },
     ],
     "no-unused-vars": ["error", { argsIgnorePattern: "next" }],
-    "max-classes-per-file": ["error", 6], // Allow up to 6 classes per file
   },
 };
