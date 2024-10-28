@@ -1,8 +1,8 @@
 class AppError extends Error {
   constructor(message, statusCode) {
-    super(message); // Call the parent class (Error)
+    super(message);
     this.statusCode = statusCode;
-    this.name = this.constructor.name; // Set the name to the class name (e.g., 'BadRequestError')
+    this.name = this.constructor.name;
   }
 }
 

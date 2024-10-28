@@ -2,8 +2,8 @@ const clothingItem = require("../models/clothingItem");
 const {
   BadRequestError,
   NotFoundError,
-  ForbiddenError
-} = require("../utils/customErrors");  // Import custom error constructors
+  ForbiddenError,
+} = require("../utils/NotFoundError"); // Import custom error constructors
 
 const createItem = async (req, res, next) => {
   try {
@@ -23,10 +23,12 @@ const createItem = async (req, res, next) => {
     );
 
     if (error.name === "ValidationError") {
-      return next(new BadRequestError("Invalid data provided for item creation."));
+      return next(
+        new BadRequestError("Invalid data provided for item creation.")
+      );
     }
 
-    return next(error);  // Pass error to the centralized error handler
+    return next(error); // Pass error to the centralized error handler
   }
 };
 
@@ -38,7 +40,7 @@ const getItems = async (req, res, next) => {
     console.error(
       `Error ${error.name} with the message '${error.message}' occurred while fetching items.`
     );
-    return next(error);  // Pass error to the centralized error handler
+    return next(error); // Pass error to the centralized error handler
   }
 };
 
@@ -65,7 +67,7 @@ const deleteItem = async (req, res, next) => {
     if (error.name === "CastError") {
       return next(new BadRequestError("Invalid item ID format."));
     }
-    return next(error);  // Pass error to the centralized error handler
+    return next(error); // Pass error to the centralized error handler
   }
 };
 
@@ -89,7 +91,7 @@ const likeItem = async (req, res, next) => {
     if (error.name === "CastError") {
       return next(new BadRequestError("Invalid item ID format."));
     }
-    return next(error);  // Pass error to the centralized error handler
+    return next(error); // Pass error to the centralized error handler
   }
 };
 
@@ -113,7 +115,7 @@ const dislikeItem = async (req, res, next) => {
     if (error.name === "CastError") {
       return next(new BadRequestError("Invalid item ID format."));
     }
-    return next(error);  // Pass error to the centralized error handler
+    return next(error); // Pass error to the centralized error handler
   }
 };
 

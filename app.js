@@ -8,7 +8,7 @@ const auth = require("./middlewares/auth");
 const { createUser, login } = require("./controllers/users");
 const { getItems } = require("./controllers/clothingItems");
 const routes = require("./routes/index");
-const { notFoundError } = require("./utils/errors");
+const { NotFoundError } = require("./utils/Errors");
 const errorHandler = require("./middlewares/errorHandler");
 const {
   validateUserCreation,
@@ -18,10 +18,25 @@ const { requestLogger, errorLogger } = require("./middlewares/logger");
 
 const app = express();
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://www.lovese.jumpingcrab.com",
+  "https://api.lovese.jumpingcrab.com",
+  "https://lovese.jumpingcrab.com",
+];
+
 const corsOptions = {
-  origin: "http://localhost:3000",
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-  allowedHeaders: "*",
+  origin: (origin, callback) => {
+    console.log("Origin:", origin);
+
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"], // Allowed methods
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 };
 
@@ -58,7 +73,7 @@ app.use(auth);
 app.use("/", routes);
 
 app.use((req, res, next) => {
-  next(new notFoundError("Requested resource not found"));
+  next(new NotFoundError("Requested resource not found"));
 });
 
 app.use(errorLogger);

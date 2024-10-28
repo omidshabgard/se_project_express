@@ -2,11 +2,12 @@
 
 ## Description
 
--'https://www.lovese.jumpingcrab.com'
--'https://api.lovese.jumpingcrab.com'
--'https://lovese.jumpingcrab.com'
-
 This project is a Node.js application that interacts with a MongoDB database to manage user data and clothing items. It provides RESTful APIs to handle CRUD operations for users and clothing items, along with liking and unliking functionalities for clothing items. The project uses modern JavaScript practices, including ES6 features, and is formatted with Prettier.
+
+Application URLs:
+https://www.lovese.jumpingcrab.com
+https://api.lovese.jumpingcrab.com
+https://lovese.jumpingcrab.com
 
 ## Technologies and Techniques
 
