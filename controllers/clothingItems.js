@@ -1,9 +1,7 @@
 const clothingItem = require("../models/clothingItem");
-const {
-  BadRequestError,
-  NotFoundError,
-  ForbiddenError,
-} = require("../utils/NotFoundError"); // Import custom error constructors
+const BadRequestError = require("../utils/BadRequestError");
+const NotFoundError = require("../utils/NotFoundError");
+const ForbiddenError = require("../utils/ForbiddenError");
 
 const createItem = async (req, res, next) => {
   try {
@@ -28,7 +26,7 @@ const createItem = async (req, res, next) => {
       );
     }
 
-    return next(error); // Pass error to the centralized error handler
+    return next(error);
   }
 };
 
@@ -40,7 +38,7 @@ const getItems = async (req, res, next) => {
     console.error(
       `Error ${error.name} with the message '${error.message}' occurred while fetching items.`
     );
-    return next(error); // Pass error to the centralized error handler
+    return next(error);
   }
 };
 
@@ -67,7 +65,7 @@ const deleteItem = async (req, res, next) => {
     if (error.name === "CastError") {
       return next(new BadRequestError("Invalid item ID format."));
     }
-    return next(error); // Pass error to the centralized error handler
+    return next(error);
   }
 };
 
@@ -91,7 +89,7 @@ const likeItem = async (req, res, next) => {
     if (error.name === "CastError") {
       return next(new BadRequestError("Invalid item ID format."));
     }
-    return next(error); // Pass error to the centralized error handler
+    return next(error);
   }
 };
 
@@ -115,7 +113,7 @@ const dislikeItem = async (req, res, next) => {
     if (error.name === "CastError") {
       return next(new BadRequestError("Invalid item ID format."));
     }
-    return next(error); // Pass error to the centralized error handler
+    return next(error);
   }
 };
 

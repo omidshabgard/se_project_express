@@ -13,16 +13,11 @@ const auth = (req, res, next) => {
     const token = authorization.replace("Bearer ", "");
     const payload = jwt.verify(token, JWT_SECRET);
 
-    // You can log these for debugging, but make sure to remove in production
-    console.log("Token:", token);
-    console.log("Payload:", payload);
-
     req.user = payload;
 
     return next();
   } catch (error) {
-    // Log the error for better debugging
-    console.error(error);
+    console.error("Auth error:", error);
 
     if (
       error.name === "JsonWebTokenError" ||

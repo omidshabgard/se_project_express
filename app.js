@@ -8,7 +8,9 @@ const auth = require("./middlewares/auth");
 const { createUser, login } = require("./controllers/users");
 const { getItems } = require("./controllers/clothingItems");
 const routes = require("./routes/index");
-const { NotFoundError } = require("./utils/Errors");
+
+const NotFoundError = require("./utils/NotFoundError");
+
 const errorHandler = require("./middlewares/errorHandler");
 const {
   validateUserCreation,
@@ -30,12 +32,14 @@ const corsOptions = {
     console.log("Origin:", origin);
 
     if (!origin || allowedOrigins.includes(origin)) {
+      console.log("CORS allowed for:", origin);
       callback(null, true);
     } else {
+      console.log("CORS blocked for:", origin);
       callback(new Error("Not allowed by CORS"));
     }
   },
-  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"], // Allowed methods
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 };
@@ -63,12 +67,15 @@ app.get("/crash-test", () => {
   }, 0);
 });
 
+// Signup and login routes should not require auth
 app.post("/signin", validateUserLogin, login);
 app.post("/signup", validateUserCreation, createUser);
 
-app.get("/items", getItems);
-
+// Apply the auth middleware after the public routes (signin/signup)
 app.use(auth);
+
+// Protected routes go here
+app.get("/items", getItems);
 
 app.use("/", routes);
 
