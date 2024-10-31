@@ -4,10 +4,12 @@
 
 This project is a Node.js application that interacts with a MongoDB database to manage user data and clothing items. It provides RESTful APIs to handle CRUD operations for users and clothing items, along with liking and unliking functionalities for clothing items. The project uses modern JavaScript practices, including ES6 features, and is formatted with Prettier.
 
-Application URLs:
-https://www.lovese.jumpingcrab.com
-https://api.lovese.jumpingcrab.com
-https://lovese.jumpingcrab.com
+## Application URLs
+
+- Frontend Application: [https://www.lovese.jumpingcrab.com](https://www.lovese.jumpingcrab.com)
+- Backend API: [https://api.lovese.jumpingcrab.com](https://api.lovese.jumpingcrab.com)
+
+**Note:** All requests from the frontend application should be directed to the backend server at `https://api.lovese.jumpingcrab.com` and not to `localhost`.
 
 ## Technologies and Techniques
 
@@ -97,11 +99,3 @@ https://lovese.jumpingcrab.com
   - `DELETE /items/:id`: Delete a clothing item by `_id`.
   - `PUT /items/:id/likes`: Like a clothing item (use `{ new: true }` for options).
   - `DELETE /items/:id/likes`: Unlike a clothing item (use `{ new: true }` for options).
-
-- Technologies
-- Access information
-- Backend repository
-- Database schema details
-- Models
-- Routes
-- Valid and invalid URLs
