@@ -61,9 +61,9 @@ app.use(express.json());
 app.post("/signin", validateUserLogin, login);
 app.post("/signup", validateUserCreation, createUser);
 
+app.get("/items", getItems);
 app.use(auth);
 
-app.get("/items", getItems);
 app.use("/", routes);
 
 app.use((req, res, next) => {
