@@ -25,6 +25,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "https://www.lovese.jumpingcrab.com",
   "https://api.lovese.jumpingcrab.com",
+  "https://wtwr-project-506620.web.app",
 ];
 
 const corsOptions = {
