@@ -45,12 +45,15 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
-const { PORT = 3001 } = process.env;
+const {
+  PORT = 3001,
+  MONGODB_URI = "mongodb://localhost:27017/wtwr_db",
+} = process.env;
 
 // Connect to MongoDB
 mongoose.set("strictQuery", false);
 mongoose
-  .connect(process.env.MONGODB_URI, {})
+  .connect(MONGODB_URI, {})
   .then(() => {
     console.log("Connected to the database");
   })
