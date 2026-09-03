@@ -66,17 +66,7 @@ app.post("/signin", validateUserLogin, login);
 app.post("/signup", validateUserCreation, createUser);
 
 app.get("/items", getItems);
-
-if (process.env.CI) {
-  app.use((req, res, next) => {
-    req.user = {
-      _id: "5d8b8592978f8bd833ca8133",
-    };
-    next();
-  });
-} else {
-  app.use(auth);
-}
+app.use(auth);
 
 app.use("/", routes);
 
